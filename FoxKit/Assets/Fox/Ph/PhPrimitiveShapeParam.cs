@@ -10,9 +10,10 @@ namespace Fox.Ph
 
         public new PhPrimitiveShapeType GetType() => (PhPrimitiveShapeType)type;
 
-        internal override void DrawGizmos()
+        internal override void DrawGizmos(bool highlighted = false)
         {
-            Gizmos.color = Color.green;
+            //Gizmos.color = Color.green;
+           Gizmos.color = highlighted ? new Color(1f, 0.5f, 0f) : new Color(0.65f, 0.72f, 0.48f);            
             Gizmos.matrix *= Matrix4x4.TRS(offset, rotation, Vector3.one);
             
             switch (type)

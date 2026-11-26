@@ -1,6 +1,7 @@
 ﻿using Fox.Core;
 using Fox.Core.Utils;
 using UnityEngine;
+using UnityEditor;
 
 namespace Fox.Ph
 {
@@ -55,21 +56,79 @@ namespace Fox.Ph
             context.OverrideProperty(nameof(springRef), Fox.Math.UnityToFoxVector3(springRef));
         }
 
-        public override void DrawGizmos()
+       public override void DrawGizmos()
         {
+            //if (limitedFlag && limit > 0)
             if (limitedFlag && limit > 0)
             {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawLine(Vector3.zero, refA * 0.1f);
-                Gizmos.DrawLine(Vector3.zero, refB * 0.1f);
+                if (EditorPrefs.GetBool("FoxKit_ShowLimitCones", false)){
+                    //This is the Gizmo colour for the Cone represented by the limit angle measured in degrees 
+                    Gizmos.color = Color.green;
 
-                if (springFlag && springConstant > 0)
-                {
-                    Vector3 actualSpringRef = springRefCustomFlag ? springRef : refB;
-                    Gizmos.color = Color.magenta;
-                    Gizmos.DrawLine(Vector3.zero, actualSpringRef * 0.1f);
-                }
+                    Vector3 axis = refA.normalized;
+
+                    if (axis.sqrMagnitude > 0.0001f)
+                    {
+                        const float length = 0.1f;
+                        const int segments = 32;
+                        const int spokes = 8;
+
+                        float angle = Mathf.Clamp(limit, 0f, 90f) * Mathf.Deg2Rad;
+
+                        Vector3 reference = Mathf.Abs(Vector3.Dot(axis, Vector3.up)) > 0.99f
+                            ? Vector3.right
+                            : Vector3.up;
+
+                        Vector3 right = Vector3.Cross(axis, reference).normalized;
+                        Vector3 up = Vector3.Cross(right, axis).normalized;
+
+                        Vector3 previousPoint = Vector3.zero;
+
+                        for (int i = 0; i <= segments; i++)
+                        {
+                            float radians = i * Mathf.PI * 2f / segments;
+
+                            Vector3 radial =
+                                right * Mathf.Cos(radians) +
+                                up * Mathf.Sin(radians);
+
+                            Vector3 point = length *
+                                (axis * Mathf.Cos(angle) +
+                                radial * Mathf.Sin(angle));
+
+                            if (i > 0)
+                                Gizmos.DrawLine(previousPoint, point);
+
+                            previousPoint = point;
+                        }
+
+                        for (int i = 0; i < spokes; i++)
+                        {
+                            float radians = i * Mathf.PI * 2f / spokes;
+
+                            Vector3 radial =
+                                right * Mathf.Cos(radians) +
+                                up * Mathf.Sin(radians);
+
+                            Vector3 point = length *
+                                (axis * Mathf.Cos(angle) +
+                                radial * Mathf.Sin(angle));
+
+                            Gizmos.DrawLine(Vector3.zero, point);
+                        }
+                    }
+                }         
             }
+            //Recal the color of the Object Gizmos, to have a different colour for the ref vectors thats not a spring ref               
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(Vector3.zero, refA * 0.1f);               
+            if (springFlag && springConstant > 0)
+            {
+                
+                Vector3 actualSpringRef = springRefCustomFlag ? springRef : refB;
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawLine(Vector3.zero, actualSpringRef * 0.1f);
+            }             
         }
     }
 }

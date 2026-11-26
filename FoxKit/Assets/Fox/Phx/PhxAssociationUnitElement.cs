@@ -9,6 +9,7 @@ namespace Fox.Phx
         public UnityEngine.Vector3 BodyOffsetPos => bodyOffsetPos;
         public UnityEngine.Vector3 ConstraintOffsetPos => constraintOffsetPos;
         public UnityEngine.Quaternion OffsetRot => offsetRot;
+        public Fox.Core.EntityLink Body => body;
 
         public override void OnDeserializeEntity(TaskLogger logger)
         {

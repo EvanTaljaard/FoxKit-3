@@ -9,9 +9,13 @@ namespace Fox.EdPh
 {
     public static class PhObjectDescGizmo
     {
+        public static bool showLimitCones = true;
+
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
         static void DrawGizmo(PhObjectDesc attached, GizmoType gizmoType)
         {
+            GameObject selectedObject = Selection.activeGameObject;
+            PhRigidBodyParam selectedBody = selectedObject != null ? selectedObject.GetComponent<PhRigidBodyParam>() : null;
             // The bodies list should be body, param, body, param, etc.
             PhRigidBodyParam mostRecentRigidBody = null;
             for (int i = 0; i < attached.Bodies.Count; i++)
@@ -31,7 +35,8 @@ namespace Fox.EdPh
                         if (entry is PhShapeParam param)
                         {
                             Gizmos.matrix = Matrix4x4.TRS(mostRecentRigidBody.GetDefaultPosition(), mostRecentRigidBody.GetDefaultRotation(), Vector3.one);
-                            param.DrawGizmos();
+                           // param.DrawGizmos();
+                           param.DrawGizmos(mostRecentRigidBody == selectedBody);
                         }
                     }
                 }
@@ -94,7 +99,8 @@ namespace Fox.EdPh
                 if (bodyB != null)
                     Gizmos.DrawLine(Vector3.zero, bodyB.GetDefaultPosition() - defaultPos);
 
-                constraint.DrawGizmos();
+                //constraint.DrawGizmos();
+                if (showLimitCones) constraint.DrawGizmos();
             }
         }
     }

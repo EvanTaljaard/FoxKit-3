@@ -37,7 +37,7 @@ namespace Fox.Ph
             context.OverrideProperty(nameof(rotation), Fox.Math.UnityToFoxQuaternion(rotation));
         }
 
-        internal virtual void DrawGizmos()
+        internal virtual void DrawGizmos(bool highlighted = false)
         {
         }
     }

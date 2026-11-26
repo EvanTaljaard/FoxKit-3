@@ -36,7 +36,23 @@ namespace FoxKit
 
             EditorApplication.update -= EnforceShowWindow;
         }
-        
+        [MenuItem("FoxKit/Show Limit Cones")]
+        private static void ToggleLimitCones()
+        {
+            bool current = EditorPrefs.GetBool("FoxKit_ShowLimitCones", false); 
+
+            EditorPrefs.SetBool("FoxKit_ShowLimitCones", !current);
+        }
+
+        [MenuItem("FoxKit/Show Limit Cones", true)] 
+        private static bool ValidateLimitCones()
+        {
+            Menu.SetChecked(
+                "FoxKit/Show Limit Cones", 
+                EditorPrefs.GetBool("FoxKit_ShowLimitCones", false)
+            );
+            return true; 
+        }        
         private void EnforceShowWindow()
         {
             if (EditorApplication.isPlaying || !EditorWindow.HasOpenInstances<SettingsWindow>())
@@ -62,7 +78,7 @@ namespace FoxKit
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
-
+            EditorGUILayout.BeginVertical("box");
             if (ValidateCurrentSettings())
             {
                 bool shouldSubmit = GUILayout.Button("Submit");

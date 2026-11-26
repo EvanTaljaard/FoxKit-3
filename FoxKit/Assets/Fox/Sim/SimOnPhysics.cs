@@ -2,8 +2,9 @@ namespace Fox.Sim
 {
     public partial class SimOnPhysics : Fox.Sim.SimObject
     {
+        public Fox.StringMap<Fox.Sim.SimAssociationUnit> SimBones => simBones;
+        public Fox.StringMap<Fox.Sim.SimAssociationUnit> SimRootBones => simRootBones;
         private SimEngineOnPhysicsParam param => engineParam as SimEngineOnPhysicsParam;
-
         private partial SimLodLevelName minLodLevel_Get() => param == null ? SimLodLevelName.SIM_UPDATE_SIMPLE : param.MinLodLevel;
         private partial void minLodLevel_Set(SimLodLevelName value)
         {

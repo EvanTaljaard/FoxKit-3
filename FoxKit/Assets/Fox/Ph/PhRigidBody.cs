@@ -185,5 +185,10 @@ namespace Fox.Ph
 
             param.SetMaterial(value);
         }
+        //Public function Accessor
+        public PhRigidBodyParam GetParam()
+        {
+            return param;
+        }
     }
 }
